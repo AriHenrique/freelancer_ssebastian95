@@ -92,8 +92,6 @@ def get_earning_calendar(_api_key: str, _start_date: datetime, _end_date: dateti
     return None
 
 
-
-
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == 'df':
         df = process_json_files()
