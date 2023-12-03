@@ -1,0 +1,5 @@
+.env
+.venv
+venv
+date/*.json
+poetry.lock
