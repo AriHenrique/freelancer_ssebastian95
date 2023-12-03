@@ -9,9 +9,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 earnings_data = []
+FOLDER = 'date'
+OUTPUT_CSV = 'data.csv'
 
 
-def process_json_files(folder_path: str = 'date', output_csv: str = 'data.csv'):
+def process_json_files(folder_path: str = FOLDER, output_csv: str = OUTPUT_CSV):
     """
     Process JSON files in a specified folder, normalizing and concatenating them into a Pandas DataFrame.
 
@@ -38,7 +40,7 @@ def process_json_files(folder_path: str = 'date', output_csv: str = 'data.csv'):
     return df_final
 
 
-def get_latest_file_name(folder_path: str = 'date'):
+def get_latest_file_name(folder_path: str = FOLDER):
     """
     Returns the name of the most recent file in a folder.
     If the 'date' folder doesn't exist, it will be created.
@@ -116,7 +118,7 @@ if __name__ == "__main__":
             count += 1
             if count == 15:
                 dados = dict(result=earnings_data[0])
-                with open(f'date/{name_json}.json', '+w') as f:
+                with open(f'{FOLDER}/{name_json}.json', '+w') as f:
                     json.dump(dados, f)
                 earnings_data = []
                 current_date = datetime.now()
@@ -124,7 +126,7 @@ if __name__ == "__main__":
                 print(f'-----save {name_json}------')
             elif not end_date < current_date:
                 dados = dict(result=earnings_data[0])
-                with open(f'date/{current_date.date()}.json', '+w') as f:
+                with open(f'{FOLDER}/{current_date.date()}.json', '+w') as f:
                     json.dump(dados, f)
                 print(f'-----save {name_json} finish------')
 
