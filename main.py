@@ -62,6 +62,7 @@ def get_earning_calendar(_api_key: str, _start_date: datetime, _end_date: dateti
 
 if __name__ == "__main__":
     api_key = os.getenv("API_KEY")
+
     latest_file_name = get_latest_file_name()
 
     if latest_file_name:
@@ -75,14 +76,15 @@ if __name__ == "__main__":
 
     while end_date < current_date:
         name_json = end_date.date()
+        earnings_data.append(get_earning_calendar(api_key, start_date, end_date))
         start_date += timedelta(days=2)
         end_date += timedelta(days=2)
-        earnings_data.append(get_earning_calendar(api_key, start_date, end_date))
         count += 1
         if count == 15:
             dados = dict(result=earnings_data[0])
             with open(f'date/{name_json}.json', '+w') as f:
                 json.dump(dados, f)
             earnings_data = []
+            current_date = datetime.now()
             count = 0
             print(f'-----save {name_json}------')
