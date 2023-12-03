@@ -82,14 +82,18 @@ def get_earning_calendar(_api_key: str, _start_date: datetime, _end_date: dateti
 
     except requests.exceptions.HTTPError as errh:
         print("HTTP Error:", errh)
+        return None
     except requests.exceptions.ConnectionError as errc:
         print("Error Connecting:", errc)
+        return None
     except requests.exceptions.Timeout as errt:
         print("Timeout Error:", errt)
+        return None
     except requests.exceptions.RequestException as err:
         print("Oops! Something went wrong:", err)
+        return None
 
-    return None
+
 
 
 if __name__ == "__main__":

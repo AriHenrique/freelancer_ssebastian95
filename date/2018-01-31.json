@@ -1,0 +1,158 @@
+{
+  "result": [
+    {
+      "date": "2018-01-01",
+      "symbol": "RHM.DE",
+      "eps": 2.85,
+      "epsEstimated": null,
+      "time": "bmo",
+      "revenue": 1722000000,
+      "revenueEstimated": null,
+      "fiscalDateEnding": "2018-01-01",
+      "updatedFromDate": "2023-08-16"
+    },
+    {
+      "date": "2018-01-02",
+      "symbol": "TLG.TO",
+      "eps": -0.01724,
+      "epsEstimated": null,
+      "time": "bmo",
+      "revenue": null,
+      "revenueEstimated": null,
+      "fiscalDateEnding": "2017-10-31",
+      "updatedFromDate": "2023-10-16"
+    },
+    {
+      "date": "2018-01-02",
+      "symbol": "4439.T",
+      "eps": null,
+      "epsEstimated": null,
+      "time": "bmo",
+      "revenue": null,
+      "revenueEstimated": null,
+      "fiscalDateEnding": "2017-11-30",
+      "updatedFromDate": "2023-05-17"
+    },
+    {
+      "date": "2018-01-02",
+      "symbol": "ZMSPF",
+      "eps": null,
+      "epsEstimated": null,
+      "time": "bmo",
+      "revenue": null,
+      "revenueEstimated": null,
+      "fiscalDateEnding": "2018-03-31",
+      "updatedFromDate": "2023-05-17"
+    },
+    {
+      "date": "2018-01-02",
+      "symbol": "CHXMF",
+      "eps": null,
+      "epsEstimated": null,
+      "time": "bmo",
+      "revenue": null,
+      "revenueEstimated": null,
+      "fiscalDateEnding": "2018-03-31",
+      "updatedFromDate": "2023-05-17"
+    },
+    {
+      "date": "2018-01-03",
+      "symbol": "CMC",
+      "eps": 0.31,
+      "epsEstimated": 0.17,
+      "time": "bmo",
+      "revenue": 1238519000,
+      "revenueEstimated": 1217118119.625,
+      "fiscalDateEnding": "2017-11-29",
+      "updatedFromDate": "2023-09-29"
+    },
+    {
+      "date": "2018-01-03",
+      "symbol": "LFCR",
+      "eps": 0.02,
+      "epsEstimated": null,
+      "time": "bmo",
+      "revenue": 136457000,
+      "revenueEstimated": null,
+      "fiscalDateEnding": "2017-11-30",
+      "updatedFromDate": "2023-11-28"
+    },
+    {
+      "date": "2018-01-03",
+      "symbol": "RGP",
+      "eps": 0.33,
+      "epsEstimated": 0.2,
+      "time": "bmo",
+      "revenue": 156738000,
+      "revenueEstimated": 117553500,
+      "fiscalDateEnding": "2017-11-24",
+      "updatedFromDate": "2023-10-12"
+    },
+    {
+      "date": "2018-01-03",
+      "symbol": "NAUH",
+      "eps": -0.13,
+      "epsEstimated": null,
+      "time": "amc",
+      "revenue": 20018000,
+      "revenueEstimated": null,
+      "fiscalDateEnding": "2017-11-29",
+      "updatedFromDate": "2023-09-29"
+    },
+    {
+      "date": "2018-01-03",
+      "symbol": "NEOG",
+      "eps": 0.13,
+      "epsEstimated": 0.13,
+      "time": "bmo",
+      "revenue": 101817000,
+      "revenueEstimated": 80219454.54545455,
+      "fiscalDateEnding": "2017-11-29",
+      "updatedFromDate": "2023-09-29"
+    },
+    {
+      "date": "2018-01-03",
+      "symbol": "LNDC",
+      "eps": 0.02,
+      "epsEstimated": 0.013,
+      "time": "amc",
+      "revenue": 136457000,
+      "revenueEstimated": 61250000,
+      "fiscalDateEnding": "2017-11-25",
+      "updatedFromDate": "2023-08-16"
+    },
+    {
+      "date": "2018-01-03",
+      "symbol": "RAD",
+      "eps": 1.53,
+      "epsEstimated": -0.4,
+      "time": "amc",
+      "revenue": 5353170000,
+      "revenueEstimated": 28254457260,
+      "fiscalDateEnding": "2017-12-01",
+      "updatedFromDate": "2023-09-29"
+    },
+    {
+      "date": "2018-01-03",
+      "symbol": "UNF",
+      "eps": 1.6,
+      "epsEstimated": 1.41,
+      "time": "bmo",
+      "revenue": 415778000,
+      "revenueEstimated": 351064670.65868264,
+      "fiscalDateEnding": "2017-11-24",
+      "updatedFromDate": "2023-09-29"
+    },
+    {
+      "date": "2018-01-03",
+      "symbol": "033240.KS",
+      "eps": -134.00195,
+      "epsEstimated": null,
+      "time": "bmo",
+      "revenue": 97235799000,
+      "revenueEstimated": null,
+      "fiscalDateEnding": "2017-10-03",
+      "updatedFromDate": "2023-05-17"
+    }
+  ]
+}

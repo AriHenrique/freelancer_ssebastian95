@@ -2,5 +2,4 @@
 .venv
 .idea
 venv
-date/*.json
 poetry.lock
