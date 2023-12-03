@@ -1,12 +1,41 @@
 import requests
 import os
 import json
+import pandas as pd
+import sys
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
 
 earnings_data = []
+
+
+def process_json_files(folder_path: str = 'date', output_csv: str = 'data.csv'):
+    """
+    Process JSON files in a specified folder, normalizing and concatenating them into a Pandas DataFrame.
+
+    Parameters:
+    - folder_path (str): Path of the directory containing JSON files (default is 'date').
+    - output_csv (str): Name of the output CSV file (default is 'data.csv').
+
+    Returns:
+    - pd.DataFrame: The final DataFrame containing unique rows from processed JSON files.
+    """
+    # List to store individual DataFrames
+    dfs = []
+    for file in os.listdir(folder_path):
+        if file.endswith('.json'):
+            file_path = os.path.join(folder_path, file)
+            df = pd.read_json(file_path, orient='records')
+            if 'result' in df.columns:
+                df_normalized = pd.json_normalize(df['result'])
+                df = pd.concat([df.drop('result', axis=1), df_normalized], axis=1)
+            dfs.append(df)
+    df_final = pd.concat(dfs, ignore_index=True).drop_duplicates()
+    df_final.to_csv(output_csv, index=False)
+    print('process df finish')
+    return df_final
 
 
 def get_latest_file_name(folder_path: str = 'date'):
@@ -62,37 +91,42 @@ def get_earning_calendar(_api_key: str, _start_date: datetime, _end_date: dateti
 
 
 if __name__ == "__main__":
-    api_key = os.getenv("API_KEY")
-
-    latest_file_name = get_latest_file_name()
-
-    if latest_file_name:
-        start_date = datetime.strptime(latest_file_name, '%Y-%m-%d')
+    if len(sys.argv) > 1 and sys.argv[1] == 'df':
+        df = process_json_files()
+        print(df)
     else:
-        start_date = datetime.strptime('2018-01-01', '%Y-%m-%d')
+        api_key = os.getenv("API_KEY")
 
-    end_date = start_date + timedelta(days=2)
-    current_date = datetime.now()
-    count = 0
+        latest_file_name = get_latest_file_name()
 
-    name_json = end_date.date()
-    while end_date < current_date:
-        earnings_data.append(get_earning_calendar(api_key, start_date, end_date))
-        start_date += timedelta(days=2)
-        end_date += timedelta(days=2)
-        count += 1
-        if count == 15:
-            dados = dict(result=earnings_data[0])
-            with open(f'date/{name_json}.json', '+w') as f:
-                json.dump(dados, f)
-            earnings_data = []
-            current_date = datetime.now()
-            count = 0
-            print(f'-----save {name_json}------')
-        elif not end_date < current_date:
-            dados = dict(result=earnings_data[0])
-            with open(f'date/{current_date.date()}.json', '+w') as f:
-                json.dump(dados, f)
-            print(f'-----save {name_json} finish------')
+        if latest_file_name:
+            start_date = datetime.strptime(latest_file_name, '%Y-%m-%d')
+        else:
+            start_date = datetime.strptime('2018-01-01', '%Y-%m-%d')
 
-    print('updated data')
+        end_date = start_date + timedelta(days=2)
+        current_date = datetime.now()
+        count = 0
+
+        name_json = end_date.date()
+        while end_date < current_date:
+            earnings_data.append(get_earning_calendar(api_key, start_date, end_date))
+            start_date += timedelta(days=2)
+            end_date += timedelta(days=2)
+            count += 1
+            if count == 15:
+                dados = dict(result=earnings_data[0])
+                with open(f'date/{name_json}.json', '+w') as f:
+                    json.dump(dados, f)
+                earnings_data = []
+                current_date = datetime.now()
+                count = 0
+                print(f'-----save {name_json}------')
+            elif not end_date < current_date:
+                dados = dict(result=earnings_data[0])
+                with open(f'date/{current_date.date()}.json', '+w') as f:
+                    json.dump(dados, f)
+                print(f'-----save {name_json} finish------')
+
+        process_json_files()
+        print('updated data')

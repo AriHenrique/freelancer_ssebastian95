@@ -44,22 +44,17 @@ or
 # Script Usage Explanation
 ## `main.py`
 
-The main.py script collects data from the API and stores it in the date folder in JSON files. Each file is named with the date of the latest data collected.
+The main.py script has been enhanced to provide more flexibility in its execution.
 
-To run the script, use the following command:
+- To collect data from the API and store it in the date folder as JSON files, use the command:
 
-`python main.py` OR `python3 main.py`
+: `python main.py` OR `python3 main.py`
+
+- To load data from the existing JSON files in the date folder into a Pandas DataFrame, use the following command:
+
+: `python main.py df`
 
 __Note__: The extraction process always checks the name of the last created JSON file and begins collecting data from the date of the latest JSON. This ensures that only the most recent data is added to the files.
 
-## `read.ipynb`
-
-The read.ipynb Jupyter Notebook creates a Pandas DataFrame by collecting all JSON files in the date folder into a single DataFrame. This allows for easy analysis and manipulation of the collected data.
-
-To run the Jupyter Notebook, use the following command:
-
-`jupyter notebook read.ipynb`
-
-This will open the notebook in your default web browser. Execute the cells in the notebook to read and process the data.
-
+These changes allow you to choose between collecting new data from the API or utilizing the existing data in the date folder based on the provided argument.
 # If you have any questions or need further assistance, feel free to ask! :)
