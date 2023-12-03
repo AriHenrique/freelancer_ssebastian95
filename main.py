@@ -3,6 +3,7 @@ import os
 import json
 import pandas as pd
 import sys
+import time
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
@@ -82,16 +83,13 @@ def get_earning_calendar(_api_key: str, _start_date: datetime, _end_date: dateti
 
     except requests.exceptions.HTTPError as errh:
         print("HTTP Error:", errh)
-        return None
     except requests.exceptions.ConnectionError as errc:
         print("Error Connecting:", errc)
-        return None
     except requests.exceptions.Timeout as errt:
         print("Timeout Error:", errt)
-        return None
     except requests.exceptions.RequestException as err:
         print("Oops! Something went wrong:", err)
-        return None
+    return None
 
 
 
@@ -114,14 +112,17 @@ if __name__ == "__main__":
         current_date = datetime.now()
         count = 0
 
-        name_json = end_date.date()
         while end_date < current_date:
-            earnings_data.append(get_earning_calendar(api_key, start_date, end_date))
+            tmp = get_earning_calendar(api_key, start_date, end_date)
+            for i in tmp:
+                earnings_data.append(i)
+            name_json = end_date.date()
             start_date += timedelta(days=2)
             end_date += timedelta(days=2)
             count += 1
+            time.sleep(0.21)
             if count == 15:
-                dados = dict(result=earnings_data[0])
+                dados = dict(result=earnings_data)
                 with open(f'{FOLDER}/{name_json}.json', '+w') as f:
                     json.dump(dados, f)
                 earnings_data = []
