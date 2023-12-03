@@ -75,8 +75,8 @@ if __name__ == "__main__":
     current_date = datetime.now()
     count = 0
 
+    name_json = end_date.date()
     while end_date < current_date:
-        name_json = end_date.date()
         earnings_data.append(get_earning_calendar(api_key, start_date, end_date))
         start_date += timedelta(days=2)
         end_date += timedelta(days=2)
@@ -89,3 +89,10 @@ if __name__ == "__main__":
             current_date = datetime.now()
             count = 0
             print(f'-----save {name_json}------')
+        elif not end_date < current_date:
+            dados = dict(result=earnings_data[0])
+            with open(f'date/{current_date.date()}.json', '+w') as f:
+                json.dump(dados, f)
+            print(f'-----save {name_json} finish------')
+
+    print('updated data')
