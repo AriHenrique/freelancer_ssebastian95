@@ -84,4 +84,5 @@ if __name__ == "__main__":
             with open(f'date/{name_json}.json', '+w') as f:
                 json.dump(dados, f)
             earnings_data = []
+            count = 0
             print(f'-----save {name_json}------')
