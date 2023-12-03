@@ -4,3 +4,4 @@
 venv
 date/*.json
 poetry.lock
+data.csv
