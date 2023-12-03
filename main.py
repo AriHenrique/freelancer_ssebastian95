@@ -3,6 +3,7 @@ import os
 import json
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+
 load_dotenv()
 
 earnings_data = []
@@ -41,7 +42,7 @@ def get_latest_file_name(folder_path: str = 'date'):
 def get_earning_calendar(_api_key: str, _start_date: datetime, _end_date: datetime):
     print(f"start_date_loop: {_start_date}")
     print(f"end_date_loop: {_end_date}")
-    url = f"https://financialmodelingprep.com/api/v3/earning_calendar?from={_start_date}&to={_end_date}&apikey={_api_key}"
+    url = f"https://financialmodelingprep.com/api/v3/earning_calendar?from={str(_start_date.date())}&to={str(_end_date.date())}&apikey={_api_key}"
 
     try:
         response = requests.get(url)
