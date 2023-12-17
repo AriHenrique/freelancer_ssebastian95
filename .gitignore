@@ -3,3 +3,4 @@
 .idea
 venv
 poetry.lock
+view.ipynb
