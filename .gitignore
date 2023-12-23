@@ -4,3 +4,9 @@
 venv
 poetry.lock
 view.ipynb
+date/earning_calendar/*.json
+date/historical_price_full/*.json
+date/historical_price_full/feitos/*.json
+date/profile/*.json
+count.py
+result.py
