@@ -2,6 +2,8 @@
 
 ## Overview
 
+<img src="architecture-dbt-athena.png">
+
 This document outlines the architecture of a freelance ETL project using AWS SAM CLI. The focus is on integrating with the Financial Modeling Prep API to process financial data. The architecture performs the following daily steps:
 
 1. **Extraction of Financial Modeling Prep API Data**: At 2 AM, a Lambda function is triggered to retrieve data from three endpoints of the API.
