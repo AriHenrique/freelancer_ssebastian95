@@ -1,0 +1,102 @@
+version: 2
+
+sources:
+  - name: raw_financial
+#    description: '{{ doc("raw_financial-data_dev") }}'
+    database: awsdatacatalog
+    schema: raw_financial-data_dev
+    meta:
+      cron: 0 2 * * ? *
+    tables:
+      - name: earning_calendar
+#        description: '{{ doc("earning_calendar") }}'
+        meta:
+          endpoint: https://financialmodelingprep.com/api/v3/earning_calendar
+        columns:
+          - name: date
+          - name: symbol
+          - name: eps
+          - name: epsestimated
+          - name: time
+          - name: revenue
+          - name: revenueestimated
+          - name: fiscaldateending
+          - name: updatedfromdate
+
+      - name: historical_price_full
+#        description: '{{ doc("historical_price_full") }}'
+        meta:
+          endpoint: https://financialmodelingprep.com/api/v3/historical-price-full/
+        columns:
+          - name: search_date
+          - name: symbol
+          - name: historical_date
+          - name: historical_open
+          - name: historical_high
+          - name: historical_low
+          - name: historical_close
+          - name: historical_adjclose
+          - name: historical_volume
+          - name: historical_unadjustedvolume
+          - name: historical_change
+          - name: historical_changepercent
+          - name: historical_vwap
+          - name: historical_label
+          - name: historical_changeovertime
+
+      - name: process_historical_price_full
+#        description: '{{ doc("process_historical_price_full") }}'
+        meta:
+          endpoint: s3://financial-data-dev-financial-s3-bucket-raw/process_historical_price_full/
+        columns:
+          - name: symbol
+          - name: date
+
+      - name: process_profile
+#        description: '{{ doc("process_profile") }}'
+        meta:
+          endpoint: s3://financial-data-dev-financial-s3-bucket-raw/process_profile/
+        columns:
+          - name: symbol
+
+      - name: profile
+#        description: '{{ doc("profile") }}'
+        meta:
+          endpoint: https://financialmodelingprep.com/api/v3/profile
+        columns:
+          - name: symbol
+          - name: price
+          - name: beta
+          - name: volavg
+          - name: mktcap
+          - name: lastdiv
+          - name: range
+          - name: changes
+          - name: companyname
+          - name: currency
+          - name: cik
+          - name: isin
+          - name: cusip
+          - name: exchange
+          - name: exchangeshortname
+          - name: industry
+          - name: website
+          - name: description
+          - name: ceo
+          - name: sector
+          - name: country
+          - name: fulltimeemployees
+          - name: phone
+          - name: address
+          - name: city
+          - name: state
+          - name: zip
+          - name: dcfdiff
+          - name: dcf
+          - name: image
+          - name: ipodate
+          - name: defaultimage
+          - name: isetf
+          - name: isactivelytrading
+          - name: isadr
+          - name: isfund

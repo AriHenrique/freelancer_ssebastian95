@@ -1,63 +1,67 @@
-# API Key Configuration
+# Documentation for Financial Modeling Prep ETL Architecture - Freelance Project
 
-Before running the scripts, you need to set up your API key. Follow these steps:
+## Overview
 
-1. Create a file named `.env` in the same directory as your scripts.
+This document outlines the architecture of a freelance ETL project using AWS SAM CLI. The focus is on integrating with the Financial Modeling Prep API to process financial data. The architecture performs the following daily steps:
 
-1. Inside the `.env` file, add your API key in the following format:
+1. **Extraction of Financial Modeling Prep API Data**: At 2 AM, a Lambda function is triggered to retrieve data from three endpoints of the API.
 
-```env
-API_KEY=your-api-key
-```
-Replace __`your-api-key`__ with your actual API key.
+2. **Data Transformation**: Before Lambda execution, the "raw" bucket is cleared, leaving only the "ref" bucket. New data is placed in the "raw" bucket. Then, Lambda triggers CodeBuild.
 
-Ensure that you keep your API key secure and do not share it publicly. This configuration allows the scripts to access the API with the provided key.
+3. **Load into Data Warehouse with dbt**: CodeBuild clones the CodeCommit repository and runs dbt to process new API data from the "raw" bucket to the "ref" bucket.
 
-# Dependencies
+4. **Cost Management**: A CloudWatch alarm monitors monthly AWS costs. If it exceeds $10, a Lambda is triggered to disable the Lambda ETL schedule.
 
-## virtualenv
+## Parameters
 
-1. windows
+- **Tags**: Identification of resources (project, environment, raw, ref, athena, etc.).
 
-`python -m venv venv`
+- **S3 Bucket**: Name of the S3 bucket to store raw data.
 
-`.\venv\Scripts\Activate.ps1`
+- **Database and Table**: Name of the Glue database and associated table.
 
-or
-1. linux
+- **Roles**: Names for IAM roles (Lambda, Crawler, CodeBuild, etc.).
 
-`python3 -m venv venv`
+- **Schedule**: Lambda scheduling configuration.
 
-`./venv/Scripts/activate`
+- **Credentials**: Group, user, and API key for access to the Financial Modeling Prep API and Athena.
 
-2. Installing Dependencies
+- **Build dbt**: CodeCommit repository and CodeBuild project name.
 
-`pip install -r requirements.txt`
+## Conditions
 
+- Condition to enable or disable Lambda scheduling based on the "EnableSchedule" parameter.
 
-## poetry
+## Resources
 
-1. `poetry install`
+### Credentials
 
+- **IAM Group and User**: Creation of an IAM group and user for API and Athena access.
 
+- **IAM Access Key**: Generation of an access key for the IAM user.
 
-# Script Usage Explanation
-## `main.py`
+### Core Resources
 
-The main.py script has been enhanced to provide more flexibility in its execution.
+- **CodeCommit Repository**: Creation of a repository to store the code.
 
-- To collect data from the API and store it in the date folder as JSON files, use the command:
-    
-  - `python main.py`
+- **S3 Buckets**: Creation of S3 buckets for raw, reference, and Athena data.
 
-    OR
-  - `python3 main.py`
+- **Lambda Layer for HTTP Requests**: Creation of a Lambda layer to support HTTP requests.
 
-- To load data from the existing JSON files in the date folder into a Pandas DataFrame, use the following command:
+- **ETL Lambda Function**: Creation of a Lambda function to execute ETL daily.
 
-  - `python main.py df`
+- **CodeBuild Project**: Creation of a CodeBuild project for building and running dbt.
 
-__Note__: The extraction process always checks the name of the last created JSON file and begins collecting data from the date of the latest JSON. This ensures that only the most recent data is added to the files.
+- **Data Lake Configuration**: Configuration of permissions for the Data Lake.
 
-These changes allow you to choose between collecting new data from the API or utilizing the existing data in the date folder based on the provided argument.
-# If you have any questions or need further assistance, feel free to ask! :)
+- **Cost Alarm**: Creation of a CloudWatch alarm to monitor costs.
+
+- **Lambda to Disable Schedule**: Creation of a Lambda to disable the ETL Lambda schedule in case of high costs.
+
+### Roles and Policies
+
+- Various IAM roles and policies to grant necessary permissions to services like Lambda, CodeBuild, Athena, and Glue.
+
+## Final Remarks
+
+This document describes the architecture of a freelance ETL project that integrates financial data from the Financial Modeling Prep API. Be sure to adjust parameters as needed and review permissions assigned to IAM roles for proper security.

@@ -1,0 +1,12 @@
+financial:
+  outputs:
+    dev:
+      database: awsdatacatalog
+      region_name: us-east-1
+      s3_data_naming: schema_table
+      s3_data_dir: s3://financial-data-dev-financial-s3-bucket-ref/dbt/
+      s3_staging_dir: s3://financial-data-dev-financial-s3-bucket-athena/dbt/
+      schema: ref_financial-data_dev
+      threads: 4
+      type: athena
+  target: dev

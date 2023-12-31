@@ -6,16 +6,12 @@ authors = ["AriHenrique <arihenriquedev@hotmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 requests = "^2.31.0"
-dbt-core = "^1.7.4"
-dbt-athena-community = "^1.7.0"
-awswrangler = "^3.4.2"
-boto3 = "^1.34.11"
+pandas = "^2.1.3"
 python-dotenv = "^1.0.0"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-

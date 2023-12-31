@@ -1,0 +1,22 @@
+version: 0.2
+env:
+  secrets-manager:
+    access_id: $secret_manager:access_id
+    access_key: $secret_manager:access_key
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+  pre_build:
+    commands:
+      - pip install dbt-core==1.6.8 dbt-athena-community
+      - echo 'region - ' $AWS_DEFAULT_REGION
+      - aws configure set aws_access_key_id $access_id
+      - aws configure set aws_secret_access_key $access_key
+      - aws configure set default.region $AWS_DEFAULT_REGION
+  build:
+    commands:
+      - aws s3 ls
+      - cd financial
+      - dbt debug
+      - dbt run --profiles-dir .

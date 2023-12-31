@@ -1,0 +1,555 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  ETL Architecture for API Financial Modeling Prep
+Globals:
+  Function:
+    Timeout: 900
+    MemorySize: 256
+    Runtime: python3.9
+Parameters:
+  # ----- Tags ------
+  TagProject:
+    Type: String
+    Default: financial-data
+  TagEnv:
+    Type: String
+    Default: dev
+  TagRaw:
+    Type: String
+    Default: raw
+  TagRef:
+    Type: String
+    Default: ref
+  TagAthena:
+    Type: String
+    Default: athena
+
+  # ----- S3 Bucket -----
+  NameS3Bucket:
+    Type: String
+    Default: financial-s3-bucket
+
+  # ------ DataBase ------
+  NameCrawler:
+    Type: String
+    Default: crawler
+  NameTable:
+    Type: String
+    Default: profile
+  NameLambdaFunction:
+    Type: String
+    Default: financial-lambda
+
+  #  ----- Roles ------
+  NameRoleLambda:
+    Type: String
+    Default: financial-lambda-role
+  NameCrawlerRole:
+    Type: String
+    Default: crawler-role
+
+  # -- schedule ---
+  NameScheduleV2:
+    Type: String
+    Default: financial-schedule-v2
+  HourSchedule:
+    Type: String
+    Default: '2'
+  MinuteSchedule:
+    Type: String
+    Default: '0'
+  EnableSchedule:
+    Type: String
+    Default: 'N'
+    AllowedValues: [ 'Y', 'y', 'N', 'n' ]
+
+  # ----- credentiols -----
+  GroupName:
+    Type: String
+    Default: Athena_Query
+  UserName:
+    Type: String
+    Default: user-dbt-query
+  ApiKey:
+    Type: String
+    Default: <api-key>
+
+  # ---- build dbt ---
+  NameCodeCommitRepo:
+    Type: String
+    Default: dbt-repo
+  NameCodeBuild:
+    Type: String
+    Default: dbt-build
+
+Conditions:
+  ScheduleCondition: !Or
+    - !Equals [ !Ref EnableSchedule, 'Y' ]
+    - !Equals [ !Ref EnableSchedule, 'y' ]
+
+Resources:
+  # ------- CREDENTIALS ---------
+  Group:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: !Sub ${GroupName}
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonAthenaFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+  UserIAM:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Sub ${UserName}
+      Groups:
+        - !Sub ${GroupName}
+    DependsOn:
+      - Group
+  AccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Sub ${UserName}
+    DependsOn:
+      - UserIAM
+
+  # --------- RESOURCES ---------
+  CodeCommitRepository:
+    Type: AWS::CodeCommit::Repository
+    Properties:
+      RepositoryName: !Sub ${TagProject}-${TagEnv}-${NameCodeCommitRepo}
+  S3BucketRaw:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${TagProject}-${TagEnv}-${NameS3Bucket}-${TagRaw}
+  S3BucketRef:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${TagProject}-${TagEnv}-${NameS3Bucket}-${TagRef}
+  S3BucketAthena:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${TagProject}-${TagEnv}-${NameS3Bucket}-${TagAthena}
+
+  # --------- SERVICES ----------
+
+  Secret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub ${TagProject}-${TagEnv}-secret
+      SecretString: !Sub |
+        {
+          "api_key": "${ApiKey}",
+          "access_id": "${AccessKey}",
+          "access_key": "${AccessKey.SecretAccessKey}"
+        }
+      Tags:
+        - Key: Project
+          Value: !Sub ${TagProject}
+        - Key: Environment
+          Value: !Sub ${TagEnv}
+        - Key: Destiny
+          Value: Lambda
+  AthenaDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: !Sub raw_${TagProject}_${TagEnv}
+  AthenaDatabaseRef:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: !Sub ref_${TagProject}_${TagEnv}
+  Crawler:
+    Type: AWS::Glue::Crawler
+    Properties:
+      Name: !Sub ${TagProject}-${TagEnv}-${NameCrawler}-${TagRaw}
+      Role: !GetAtt CrawlerRole.Arn
+      DatabaseName: !Ref AthenaDatabase
+      Targets:
+        S3Targets:
+          - Path: !Sub s3://${TagProject}-${TagEnv}-${NameS3Bucket}-${TagRaw}/
+      Tags:
+        "Project": !Sub ${TagProject}
+        "Environment": !Sub ${TagEnv}
+        "Destiny": Crawler
+    DependsOn:
+      - S3BucketRaw
+      - AthenaDatabase
+  RequestsLambdaLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: requests-layer
+      ContentUri: libs/requests.zip
+      CompatibleArchitectures:
+        - x86_64
+      CompatibleRuntimes:
+        - python3.9
+        - python3.10
+        - python3.11
+  LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${TagProject}-${TagEnv}-${NameLambdaFunction}
+      Role: !GetAtt RoleLambda.Arn
+      CodeUri: aws/lambda/
+      Handler: main.lambda_handler
+      Layers:
+        - arn:aws:lambda:us-east-1:336392948345:layer:AWSDataWrangler-Python39:1
+        - !Ref RequestsLambdaLayer
+      Environment:
+        Variables:
+          code_build_name: !Sub ${TagProject}-${TagEnv}-${NameCodeBuild}
+          crawler_name: !Sub ${TagProject}-${TagEnv}-${NameCrawler}-${TagRaw}
+          table_name: !Sub ${NameTable}
+          data_base_name: !Ref AthenaDatabase
+          secret_key: !Sub ${TagProject}-${TagEnv}-secret
+          bucket_raw: !Sub ${TagProject}-${TagEnv}-${NameS3Bucket}-${TagRaw}
+          output_location:  !Sub s3://${TagProject}-${TagEnv}-${NameS3Bucket}-${TagAthena}/
+      Tags:
+        "Project": !Sub ${TagProject}
+        "Environment": !Sub ${TagEnv}
+        "Destiny": Crawler
+      Events:
+        Day:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: !Sub cron(${MinuteSchedule} ${HourSchedule} * * ? *)
+            Name: !Ref NameScheduleV2
+            RetryPolicy:
+              MaximumRetryAttempts: 0
+            Description: !Sub The lambda always starts at ${HourSchedule}Hours and ${MinuteSchedule}Minutes
+            State: !If
+              - ScheduleCondition
+              - 'ENABLED'
+              - 'DISABLED'
+    DependsOn:
+      - Secret
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub ${TagProject}-${TagEnv}-${NameCodeBuild}
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Type: LINUX_CONTAINER
+        Image: aws/codebuild/standard:7.0
+        PrivilegedMode: true
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Type: PLAINTEXT
+            Value: !Sub ${AWS::Region}
+          - Name: secret_manager
+            Type: PLAINTEXT
+            Value: !Sub ${TagProject}-${TagEnv}-secret
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Source:
+        Type: CODECOMMIT
+        Location: !Sub https://git-codecommit.${AWS::Region}.amazonaws.com/v1/repos/${TagProject}-${TagEnv}-${NameCodeCommitRepo}
+        BuildSpec: config/buildspec.yml
+      SourceVersion: refs/heads/master
+      Tags:
+        - Key: Project
+          Value: !Sub ${TagProject}
+        - Key: Environment
+          Value: !Sub ${TagEnv}
+        - Key: Destiny
+          Value: Athena
+    DependsOn:
+      - CodeCommitRepository
+      - S3BucketRef
+      - S3BucketAthena
+      - AthenaDatabase
+      - Crawler
+      - LambdaFunction
+      - AccessKey
+  DataLakeSettings:
+    Type: AWS::LakeFormation::DataLakeSettings
+    Properties:
+      Admins:
+        - DataLakePrincipalIdentifier: !GetAtt UserIAM.Arn
+  CostAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: CostAlarm
+      Namespace: AWS/Billing
+      MetricName: EstimatedCharges
+      Dimensions:
+        - Name: Currency
+          Value: USD
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 10
+      Statistic: Maximum
+      EvaluationPeriods: 1
+      Period: 86400  # Um período de um dia
+      AlarmActions:
+        - !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${TagProject}-${TagEnv}-${NameLambdaFunction}-disable-schedule
+  DisableScheduleLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${TagProject}-${TagEnv}-${NameLambdaFunction}-disable-schedule
+      Role: !GetAtt DisabledLambdaExecutionRole.Arn
+      CodeUri: aws/disable_schedule/
+      Handler: main.handler
+      Timeout: 30
+      MemorySize: 128
+      Environment:
+        Variables:
+          ScheduleName: !Ref NameScheduleV2
+          State: DISABLED
+
+  # ---------- ROLES -----------
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${TagEnv}-${TagProject}-${NameCodeBuild}-role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodeCommitFullAccess
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: [ 'sts:AssumeRole' ]
+            Effect: Allow
+            Principal:
+              Service: [ codebuild.amazonaws.com ]
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+        - PolicyName: !Sub ${TagProject}-${TagEnv}-CodeBuildAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - 'logs:*'
+                  - 'ec2:CreateNetworkInterface'
+                  - 'ec2:DescribeNetworkInterfaces'
+                  - 'ec2:DeleteNetworkInterface'
+                  - 'ec2:DescribeSubnets'
+                  - 'ec2:DescribeSecurityGroups'
+                  - 'ec2:DescribeDhcpOptions'
+                  - 'ec2:DescribeVpcs'
+                  - 'ec2:CreateNetworkInterfacePermission'
+                Effect: Allow
+                Resource: '*'
+              - Action:
+                  - 'secretsmanager:GetSecretValue'
+                Effect: Allow
+                Resource: !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
+      Tags:
+        - Key: Project
+          Value: !Sub ${TagProject}
+        - Key: Environment
+          Value: !Sub ${TagEnv}
+        - Key: Destiny
+          Value: CodeBuild
+  CodeBuildAccessPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 'ec2:DescribeNetworkInterfaces'
+              - 'ec2:DescribeSubnets'
+              - 'ec2:DescribeSecurityGroups'
+              - 'ec2:DescribeDhcpOptions'
+              - 'ec2:DescribeVpcs'
+            Effect: Allow
+            Resource: '*'
+          - Action:
+              - 'ec2:CreateNetworkInterface'
+              - 'ec2:DeleteNetworkInterface'
+              - 'ec2:CreateNetworkInterfacePermission'
+            Effect: Allow
+            Resource: !Sub 'arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:network-interface/*'
+          - Action:
+              - 'logs:DescribeLogGroups'
+              - 'logs:PutLogEvents'
+              - 'logs:CreateLogGroup'
+              - 'logs:CreateLogStream'
+            Effect: Allow
+            Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${TagProject}-${TagEnv}-${NameCodeBuild}:*'
+      Roles:
+        - !Ref CodeBuildRole
+  CloudWatchEventsCodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - events.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Project
+          Value: !Sub ${TagProject}
+        - Key: Environment
+          Value: !Sub ${TagEnv}
+        - Key: Destiny
+          Value: CodeBuild
+  CloudWatchBuildAccessPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: CloudWatchDbtBuildAccessPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'codebuild:StartBuild'
+            Resource: !GetAtt CodeBuildProject.Arn
+      Roles:
+        - !Ref CloudWatchEventsCodeBuildRole
+  CrawlerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${TagProject}-${TagEnv}-${NameCrawlerRole}
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - glue.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: GlueCrawlerPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource: !Sub arn:aws:s3:::${TagProject}-${TagEnv}-${NameS3Bucket}-${TagRaw}/*
+        - PolicyName: AWSGlueServiceRole
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - glue:*
+                  - s3:GetBucketLocation
+                  - s3:ListBucket
+                  - s3:ListAllMyBuckets
+                  - s3:GetBucketAcl
+                  - ec2:DescribeVpcEndpoints
+                  - ec2:DescribeRouteTables
+                  - ec2:CreateNetworkInterface
+                  - ec2:DeleteNetworkInterface
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:DescribeSecurityGroups
+                  - ec2:DescribeSubnets
+                  - ec2:DescribeVpcAttribute
+                  - iam:ListRolePolicies
+                  - iam:GetRole
+                  - iam:GetRolePolicy
+                  - cloudwatch:PutMetricData
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action:
+                  - s3:CreateBucket
+                Resource:
+                  - arn:aws:s3:::aws-glue-*
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource:
+                  - arn:aws:s3:::aws-glue-*/*
+                  - arn:aws:s3:::*/*aws-glue-*/*
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource:
+                  - arn:aws:s3:::crawler-public*
+                  - arn:aws:s3:::aws-glue-*
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - arn:aws:logs:*:*:*:/aws-glue/*
+              - Effect: Allow
+                Action:
+                  - ec2:CreateTags
+                  - ec2:DeleteTags
+                Condition:
+                  ForAllValues:StringEquals:
+                    aws:TagKeys:
+                      - aws-glue-service-resource
+                Resource:
+                  - arn:aws:ec2:*:*:network-interface/*
+                  - arn:aws:ec2:*:*:security-group/*
+                  - arn:aws:ec2:*:*:instance/*
+  RoleLambda:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${TagProject}-${TagEnv}-${NameRoleLambda}-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaAthenaPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                  - athena:*
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - arn:aws:s3:::*
+        - PolicyName: CodeBuildAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                Resource: '*'
+        - PolicyName: GlueCrawlerAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - glue:*
+                Resource: '*'
+  DisabledLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEventBridgeSchedulerFullAccess
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+
+
+
+
+
+

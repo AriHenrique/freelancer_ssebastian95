@@ -1,0 +1,112 @@
+[0m19:54:40.776087 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001EF0EE73FD0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001EF11CCB010>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001EF11CCBB20>]}
+
+
+============================== 19:54:40.779593 | c1bc5f0f-53cc-47f8-b881-4433a9ae9bd7 ==============================
+[0m19:54:40.779593 [info ] [MainThread]: Running with dbt=1.7.4
+[0m19:54:40.779593 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'log_cache_events': 'False', 'write_json': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': '.', 'version_check': 'True', 'warn_error': 'None', 'log_path': 'logs', 'fail_fast': 'False', 'debug': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'static_parser': 'True', 'log_format': 'default', 'invocation_command': 'dbt build -s profile --profiles-dir .', 'target_path': 'None', 'introspect': 'True', 'send_anonymous_usage_stats': 'True'}
+[0m19:54:40.781053 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path C:\Users\arihe\OneDrive - sga.pucminas.br\developer\freela\dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m19:54:40.782055 [debug] [MainThread]: Command `dbt build` failed at 19:54:40.782055 after 0.01 seconds
+[0m19:54:40.783055 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001EF0EE73FD0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001EF0AD072E0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001EF11CCBAF0>]}
+[0m19:54:40.783055 [debug] [MainThread]: Flushing usage events
+[0m19:55:20.570944 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001ECF69234F0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001ECF977AFB0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001ECF977BAC0>]}
+
+
+============================== 19:55:20.573946 | 72dec4c9-2a8f-459c-815b-1c8f36c9a20c ==============================
+[0m19:55:20.573946 [info ] [MainThread]: Running with dbt=1.7.4
+[0m19:55:20.574946 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'warn_error': 'None', 'version_check': 'True', 'profiles_dir': '.', 'log_path': 'logs', 'fail_fast': 'False', 'debug': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'invocation_command': 'dbt build -s profile --profiles-dir .', 'static_parser': 'True', 'log_format': 'default', 'target_path': 'None', 'introspect': 'True', 'send_anonymous_usage_stats': 'True'}
+[0m19:55:20.574946 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path C:\Users\arihe\OneDrive - sga.pucminas.br\developer\freela\dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m19:55:20.575947 [debug] [MainThread]: Command `dbt build` failed at 19:55:20.575947 after 0.01 seconds
+[0m19:55:20.576947 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001ECF69234F0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001ECF27772E0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001ECF977BA90>]}
+[0m19:55:20.577947 [debug] [MainThread]: Flushing usage events
+[0m19:56:01.836223 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F02A0434F0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F02CE9AFB0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F02CE9BAC0>]}
+
+
+============================== 19:56:01.839224 | 9e4653b6-d7d7-4d22-a606-9abae68ab97c ==============================
+[0m19:56:01.839224 [info ] [MainThread]: Running with dbt=1.7.4
+[0m19:56:01.839224 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'log_cache_events': 'False', 'write_json': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': '.', 'version_check': 'True', 'fail_fast': 'False', 'log_path': 'logs', 'debug': 'False', 'warn_error': 'None', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'invocation_command': 'dbt build -s tmp_profile --profiles-dir .', 'static_parser': 'True', 'introspect': 'True', 'target_path': 'None', 'log_format': 'default', 'send_anonymous_usage_stats': 'True'}
+[0m19:56:01.839224 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path C:\Users\arihe\OneDrive - sga.pucminas.br\developer\freela\dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m19:56:01.840659 [debug] [MainThread]: Command `dbt build` failed at 19:56:01.840659 after 0.01 seconds
+[0m19:56:01.841660 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F02A0434F0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F025DD72E0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F02CE9BA90>]}
+[0m19:56:01.842660 [debug] [MainThread]: Flushing usage events
+[0m19:58:18.924784 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DC9FD18A30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DCA2BBAF50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DCA2BBBA60>]}
+
+
+============================== 19:58:18.927784 | 57f1770f-6197-40d3-b53f-623908fbdb44 ==============================
+[0m19:58:18.927784 [info ] [MainThread]: Running with dbt=1.7.4
+[0m19:58:18.928785 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'warn_error': 'None', 'version_check': 'True', 'debug': 'False', 'log_path': 'logs', 'fail_fast': 'False', 'profiles_dir': '.', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'introspect': 'True', 'invocation_command': 'dbt build -s tmp_profile --profiles-dir .', 'static_parser': 'True', 'target_path': 'None', 'log_format': 'default', 'send_anonymous_usage_stats': 'True'}
+[0m19:58:18.929289 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path C:\Users\arihe\OneDrive - sga.pucminas.br\developer\freela\dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m19:58:18.930292 [debug] [MainThread]: Command `dbt build` failed at 19:58:18.930292 after 0.01 seconds
+[0m19:58:18.931291 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DC9FD18A30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DC9BB172E0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DCA2BBBA30>]}
+[0m19:58:18.931291 [debug] [MainThread]: Flushing usage events
+[0m19:59:18.780335 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000018923FB3550>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000018926E0AFE0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000018926E0BAF0>]}
+
+
+============================== 19:59:18.784337 | f9cf8972-24f0-444f-a98c-4008ac7f3f8b ==============================
+[0m19:59:18.784337 [info ] [MainThread]: Running with dbt=1.7.4
+[0m19:59:18.784337 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'log_cache_events': 'False', 'write_json': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': '.', 'version_check': 'True', 'debug': 'False', 'log_path': 'logs', 'fail_fast': 'False', 'warn_error': 'None', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'log_format': 'default', 'static_parser': 'True', 'invocation_command': 'dbt build -s tmp_profile --profiles-dir .', 'introspect': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'send_anonymous_usage_stats': 'True'}
+[0m19:59:18.785337 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path C:\Users\arihe\OneDrive - sga.pucminas.br\developer\freela\dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m19:59:18.786337 [debug] [MainThread]: Command `dbt build` failed at 19:59:18.786337 after 0.01 seconds
+[0m19:59:18.787337 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000018923FB3550>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001891FE272E0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000018926E0BAC0>]}
+[0m19:59:18.787337 [debug] [MainThread]: Flushing usage events
+[0m20:00:03.791763 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DCD6003550>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DCD8E5AF80>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DCD8E5BA90>]}
+
+
+============================== 20:00:03.794764 | fd244357-8a92-4e55-b53d-88306538a7fa ==============================
+[0m20:00:03.794764 [info ] [MainThread]: Running with dbt=1.7.4
+[0m20:00:03.795764 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'warn_error': 'None', 'debug': 'False', 'version_check': 'True', 'log_path': 'logs', 'profiles_dir': '.', 'fail_fast': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'log_format': 'default', 'introspect': 'True', 'invocation_command': 'dbt build -s tmp_profile --profiles-dir .', 'static_parser': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'send_anonymous_usage_stats': 'True'}
+[0m20:00:03.795764 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path C:\Users\arihe\OneDrive - sga.pucminas.br\developer\freela\dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m20:00:03.797765 [debug] [MainThread]: Command `dbt build` failed at 20:00:03.796764 after 0.01 seconds
+[0m20:00:03.798765 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DCD6003550>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DCD1DE72E0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DCD8E5BA60>]}
+[0m20:00:03.798765 [debug] [MainThread]: Flushing usage events
+[0m20:00:43.963249 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021AC86834F0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021ACB4DAFB0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021ACB4DBAC0>]}
+
+
+============================== 20:00:43.966299 | 1439c01c-9a48-4f46-865c-e8f59a864de4 ==============================
+[0m20:00:43.966299 [info ] [MainThread]: Running with dbt=1.7.4
+[0m20:00:43.967301 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': '.', 'version_check': 'True', 'warn_error': 'None', 'log_path': 'logs', 'fail_fast': 'False', 'debug': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'log_format': 'default', 'introspect': 'True', 'invocation_command': 'dbt build -s tmp_profile --profiles-dir .', 'static_parser': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'send_anonymous_usage_stats': 'True'}
+[0m20:00:43.967301 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path C:\Users\arihe\OneDrive - sga.pucminas.br\developer\freela\dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m20:00:43.968805 [debug] [MainThread]: Command `dbt build` failed at 20:00:43.968805 after 0.01 seconds
+[0m20:00:43.969835 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021AC86834F0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021AC45772E0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021ACB4DBA90>]}
+[0m20:00:43.969835 [debug] [MainThread]: Flushing usage events
+[0m20:17:13.763572 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000012A49964A90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000012A4C7FAF80>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000012A4C7FBA90>]}
+
+
+============================== 20:17:13.765572 | 767342ec-1f6b-4ac5-aea7-e025736e61f4 ==============================
+[0m20:17:13.765572 [info ] [MainThread]: Running with dbt=1.7.4
+[0m20:17:13.767075 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'log_cache_events': 'False', 'write_json': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': '.', 'fail_fast': 'False', 'debug': 'False', 'log_path': 'logs', 'version_check': 'True', 'warn_error': 'None', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'log_format': 'default', 'invocation_command': 'dbt build -s profile --profiles-dir .', 'static_parser': 'True', 'introspect': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'send_anonymous_usage_stats': 'True'}
+[0m20:17:13.767075 [error] [MainThread]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path C:\Users\arihe\OneDrive - sga.pucminas.br\developer\freela\dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m20:17:13.768089 [debug] [MainThread]: Command `dbt build` failed at 20:17:13.768089 after 0.01 seconds
+[0m20:17:13.769090 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000012A49964A90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000012A458272E0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000012A4C7FBA60>]}
+[0m20:17:13.770090 [debug] [MainThread]: Flushing usage events
